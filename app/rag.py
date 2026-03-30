@@ -6,7 +6,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
-
+import os
 load_dotenv()
 
 class RAG:
@@ -32,7 +32,7 @@ class RAG:
             Context: {context}"""
 
     def ingest(self):
-        file_path = "nke-10k-2023.pdf"
+        file_path = "./nke-10k-2023.pdf"
         loader = PyPDFLoader(file_path)
         docs = loader.load()
         all_splits = self.text_splitter.split_documents(docs)

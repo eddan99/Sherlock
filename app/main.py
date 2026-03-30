@@ -1,15 +1,16 @@
 from fastapi import FastAPI
-from rag import RAG
+from app.rag import RAG
 
 app = FastAPI()
 rag = RAG()
 
 @app.post("/documents")
-async def root():
-    return {"message": "Hello World"}
+async def upload_documents():
+        rag.ingest()
+        return {"message": "Documents ingested successfully."}
 
 @app.post("/query")
-async def query():
-    answer = await rag.query("how many employees does Nike have?")
+async def query(question: str):
+    answer = await rag.query(question)
     return {"answer": answer}
 
