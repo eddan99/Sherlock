@@ -84,7 +84,6 @@ class RAG:
         return answer
     
     def list_uploaded_files(self):
-        uploads_dir = settings.upload_folder
-        if not os.path.exists(uploads_dir):
-            return []   
-        return os.listdir(uploads_dir)
+        if not os.path.exists(settings.upload_folder):
+            return []
+        return os.listdir(settings.upload_folder)
