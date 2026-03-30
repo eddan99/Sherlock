@@ -1,30 +1,32 @@
 from langchain_google_genai import GoogleGenerativeAI, GoogleGenerativeAIEmbeddings
-from langchain_chroma import Chroma
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_chroma import Chroma
 from fastapi import UploadFile, File
-from dotenv import load_dotenv
+from app.config import Settings
 import os
-load_dotenv()
+
+settings = Settings()
 
 class RAG:
     def __init__(self):
+        os.environ["GOOGLE_API_KEY"] = settings.google_api_key
         self.embeddings = GoogleGenerativeAIEmbeddings(
-            model="models/gemini-embedding-001"
+            model=settings.embedding_model
         )
         self.vector_store = Chroma(
             collection_name="example_collection",
             embedding_function=self.embeddings,
-            persist_directory="./chroma_langchain_db",        
+            persist_directory=settings.chroma_path,        
         )
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000, chunk_overlap=200, add_start_index=True
         )
         self.llm = GoogleGenerativeAI(
-            model="gemini-2.5-flash-lite", 
+            model=settings.llm_model, 
             temperature=0.0
         )
         self.system_prompt = """You are a really good assistant for answering questions based on a document.
@@ -33,8 +35,8 @@ class RAG:
             Context: {context}"""
 
     async def ingest(self, file: UploadFile):
-        os.makedirs("./uploads", exist_ok=True)
-        file_path = os.path.join("./uploads", file.filename)
+        os.makedirs(settings.upload_folder, exist_ok=True)
+        file_path = os.path.join(settings.upload_folder, file.filename)
 
         content = await file.read()
         with open(file_path, "wb") as uploaded_file:
