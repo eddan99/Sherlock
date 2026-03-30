@@ -7,6 +7,7 @@ function App() {
   const [messages, setMessages] = useState([])
 
   return (
+    
     <div className="app">
       <div className="messages">
         {messages.map((msg, i) => (

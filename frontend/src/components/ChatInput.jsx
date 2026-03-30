@@ -1,6 +1,7 @@
 
 import { useState, useRef } from "react"
 import { uploadDocument, queryDocument } from "../api"
+import { Paperclip } from "lucide-react"
 
 function ChatInput({ setMessages }) {
   const [input, setInput] = useState("")
@@ -30,7 +31,8 @@ function ChatInput({ setMessages }) {
   return (
     <div className="chat-input-wrapper">
       <input type="file" accept=".pdf" onChange={handleFileUpload} ref={fileRef} hidden />
-      <button className="upload-btn" onClick={() => fileRef.current.click()}>+</button>
+      <button className="upload-btn" onClick={() => fileRef.current.click()}><Paperclip size={20} />
+</button>
       <input
         className="chat-input"
         type="text"
