@@ -34,7 +34,7 @@ function ChatInput({ setMessages }) {
       <input
         className="chat-input"
         type="text"
-        placeholder="Ask Sherlock"
+        placeholder="ask sherlock..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSend()}
