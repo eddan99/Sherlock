@@ -3,13 +3,14 @@ import { useState, useRef } from "react"
 import { uploadDocument, queryDocument } from "../api"
 import { Paperclip } from "lucide-react"
 
-function ChatInput({ setMessages }) {
+function ChatInput({ setMessages, setUploadStatus }) {
   const [input, setInput] = useState("")
   const fileRef = useRef(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
 
   async function handleSend() {
-    if (!input.trim() || isLoading) return
+    if (!input.trim() || isLoading || isUploading) return
     setMessages(prev => [...prev, { role: "user", text: input }, { role: "assistant", text: "..." }])
     setInput("")
     setIsLoading(true)
@@ -23,9 +24,13 @@ function ChatInput({ setMessages }) {
   }
 
     async function handleFileUpload(e) {
-    const file = e.target.files[0]
-    if (!file) return
-    await uploadDocument(file)
+      const file = e.target.files[0]
+      if (!file) return
+      setIsUploading(true)
+      setUploadStatus("Uploading...")
+      await uploadDocument(file)
+      setUploadStatus(`${file.name} uploaded`)
+      setIsUploading(false)
     }
 
   return (
@@ -39,9 +44,9 @@ function ChatInput({ setMessages }) {
         placeholder="ask sherlock..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+        onKeyDown={(e) => e.key === "Enter" && !isUploading && handleSend()}
       />
-      <button className="send-btn" onClick={handleSend} disabled={isLoading}>
+      <button className="send-btn" onClick={handleSend} disabled={isLoading || isUploading}>
         {isLoading ? "..." : "Send"}
       </button>
     </div>
