@@ -7,12 +7,14 @@ function App() {
   const [messages, setMessages] = useState([])
 
   return (
-    <>
-      {messages.map((msg, i) => (
-        <ChatMessage key={i} role={msg.role} text={msg.text} />
-      ))}
-      <ChatInput messages={messages} setMessages={setMessages} />
-    </>
+    <div className="app">
+      <div className="messages">
+        {messages.map((msg, i) => (
+          <ChatMessage key={i} role={msg.role} text={msg.text} />
+        ))}
+      </div>
+      <ChatInput setMessages={setMessages} />
+    </div>
   )
 }
 

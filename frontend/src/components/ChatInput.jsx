@@ -2,7 +2,7 @@
 import { useState, useRef } from "react"
 import { uploadDocument, queryDocument } from "../api"
 
-function ChatInput({ messages, setMessages }) {
+function ChatInput({ setMessages }) {
   const [input, setInput] = useState("")
   const fileRef = useRef(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -28,16 +28,18 @@ function ChatInput({ messages, setMessages }) {
     }
 
   return (
-    <div>
+    <div className="chat-input-wrapper">
       <input type="file" accept=".pdf" onChange={handleFileUpload} ref={fileRef} hidden />
-      <button onClick={() => fileRef.current.click()}>+</button>
+      <button className="upload-btn" onClick={() => fileRef.current.click()}>+</button>
       <input
+        className="chat-input"
         type="text"
         placeholder="Ask Sherlock"
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleSend()}
       />
-      <button onClick={handleSend} disabled={isLoading}>
+      <button className="send-btn" onClick={handleSend} disabled={isLoading}>
         {isLoading ? "..." : "Send"}
       </button>
     </div>
