@@ -5,13 +5,20 @@ import { uploadDocument, queryDocument } from "../api"
 function ChatInput({ messages, setMessages }) {
   const [input, setInput] = useState("")
   const fileRef = useRef(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   async function handleSend() {
-    if (!input.trim()) return
-    setMessages(prev => [...prev, { role: "user", text: input }])
+    if (!input.trim() || isLoading) return
+    setMessages(prev => [...prev, { role: "user", text: input }, { role: "assistant", text: "..." }])
     setInput("")
+    setIsLoading(true)
     const data = await queryDocument(input)
-    setMessages(prev => [...prev, { role: "assistant", text: data.answer }])
+    setMessages(prev => {
+      const updated = [...prev]
+      updated[updated.length - 1] = { role: "assistant", text: data.answer }
+      return updated
+    })
+    setIsLoading(false)
   }
 
     async function handleFileUpload(e) {
@@ -30,7 +37,9 @@ function ChatInput({ messages, setMessages }) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
-      <button onClick={handleSend}>Send</button>
+      <button onClick={handleSend} disabled={isLoading}>
+        {isLoading ? "..." : "Send"}
+      </button>
     </div>
   )
 }
