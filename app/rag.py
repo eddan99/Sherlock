@@ -1,12 +1,13 @@
 from langchain_google_genai import GoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_chroma import Chroma
-import getpass
-import os
-from dotenv import load_dotenv
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from dotenv import load_dotenv
 
 load_dotenv()
-
 
 class RAG:
     def __init__(self):
@@ -31,7 +32,36 @@ class RAG:
             Context: {context}"""
 
     def ingest(self):
-        pass
+        file_path = "nke-10k-2023.pdf"
+        loader = PyPDFLoader(file_path)
+        docs = loader.load()
+        all_splits = self.text_splitter.split_documents(docs)
+        self.vector_store.add_documents(documents=all_splits)
 
-    def query():
-        pass
+    async def query(self, question):
+        retriever = self.vector_store.as_retriever(
+            search_type="similarity",
+            search_kwargs={"k": 3},
+        )
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", self.system_prompt),
+            ("human", "{question}"),
+        ])
+
+        def format_docs(docs):
+            return "\n\n".join(d.page_content for d in docs)
+
+        chain = (
+            {"context": retriever | format_docs, "question": RunnablePassthrough()}
+            | prompt
+            | self.llm
+            | StrOutputParser()
+        )
+        result = chain.invoke(question)
+        return result
+    
+if __name__ == "__main__":
+    rag = RAG()
+    rag.ingest()
+    import asyncio
+    print(asyncio.run(rag.query("how many employees does Nike have?")))
