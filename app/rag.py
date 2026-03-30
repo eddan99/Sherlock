@@ -2,7 +2,6 @@ from langchain_google_genai import GoogleGenerativeAI, GoogleGenerativeAIEmbeddi
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from fastapi import UploadFile, File
@@ -33,6 +32,11 @@ class RAG:
             Use only the following context to answer the question.
             If the answer is not in the context, say: "I don't have enough evidence for that."
             Context: {context}"""
+        
+        self.judge_prompt = """You are a judge. Given a question, context and answer, 
+        respond with only 'GROUNDED' or 'NOT_GROUNDED' depending on whether the answer 
+        is based on the context."""
+
 
     async def ingest(self, file: UploadFile):
         os.makedirs(settings.upload_folder, exist_ok=True)
@@ -52,26 +56,35 @@ class RAG:
             search_type="similarity",
             search_kwargs={"k": 3},
         )
+
+        docs = retriever.invoke(question)
+        context = "\n\n".join(d.page_content for d in docs)
+
         prompt = ChatPromptTemplate.from_messages([
             ("system", self.system_prompt),
             ("human", "{question}"),
         ])
 
-        def format_docs(docs):
-            return "\n\n".join(d.page_content for d in docs)
+        result = (prompt | self.llm | StrOutputParser()).invoke({"context": context, "question": question})
 
-        chain = (
-            {"context": retriever | format_docs, "question": RunnablePassthrough()}
-            | prompt
-            | self.llm
-            | StrOutputParser()
-        )
-        result = chain.invoke(question)
-        return result
+        return self.judge(question, context, result)
 
+    def judge(self, question, context, answer):
+        judge_prompt = ChatPromptTemplate.from_messages([
+            ("system", self.judge_prompt),
+            ("human", "Question: {question}\nContext: {context}\nAnswer: {answer}")
+        ])
+        decision_from_judge = (judge_prompt | self.llm | StrOutputParser()).invoke({
+            "question": question,
+            "context": context,
+            "answer": answer
+        })
+        if "NOT_GROUNDED" in decision_from_judge.upper():
+            return "I don't have enough evidence to answer that."
+        return answer
+    
     def list_uploaded_files(self):
         uploads_dir = settings.upload_folder
         if not os.path.exists(uploads_dir):
             return []   
         return os.listdir(uploads_dir)
-    
