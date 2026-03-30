@@ -68,4 +68,10 @@ class RAG:
         )
         result = chain.invoke(question)
         return result
+
+    def list_uploaded_files(self):
+        uploads_dir = settings.upload_folder
+        if not os.path.exists(uploads_dir):
+            return []   
+        return os.listdir(uploads_dir)
     

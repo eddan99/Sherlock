@@ -21,3 +21,7 @@ async def query(request: QueryRequest):
         return {"answer": answer}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/documents")
+async def uploaded_files():
+    return rag.list_uploaded_files()
