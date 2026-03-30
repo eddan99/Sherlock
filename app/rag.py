@@ -18,7 +18,7 @@ class RAG:
             model=settings.embedding_model
         )
         self.vector_store = Chroma(
-            collection_name="example_collection",
+            collection_name=settings.collection_name,
             embedding_function=self.embeddings,
             persist_directory=settings.chroma_path,        
         )

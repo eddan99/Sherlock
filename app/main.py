@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from app.rag import RAG
 from fastapi import UploadFile, File
-
+from app.schemas import QueryRequest
 
 app = FastAPI()
 rag = RAG()
@@ -15,9 +15,9 @@ async def upload_documents(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/query")
-async def query(question: str):
+async def query(request: QueryRequest):
     try:
-        answer = await rag.query(question)
+        answer = await rag.query(request.question)
         return {"answer": answer}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
