@@ -2,9 +2,18 @@ from fastapi import FastAPI, HTTPException
 from app.rag import RAG
 from fastapi import UploadFile, File
 from app.schemas import QueryRequest
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
 rag = RAG()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/documents")
 async def upload_documents(file: UploadFile = File(...)):

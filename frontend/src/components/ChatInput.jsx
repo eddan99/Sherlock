@@ -1,19 +1,28 @@
 
 import { useState, useRef } from "react"
+import { uploadDocument, queryDocument } from "../api"
 
-function ChatInput({ onSend, onFileUpload }) {
+function ChatInput({ messages, setMessages }) {
   const [input, setInput] = useState("")
   const fileRef = useRef(null)
 
-  function handleSend() {
+  async function handleSend() {
     if (!input.trim()) return
-    onSend(input)
+    setMessages(prev => [...prev, { role: "user", text: input }])
     setInput("")
+    const data = await queryDocument(input)
+    setMessages(prev => [...prev, { role: "assistant", text: data.answer }])
   }
+
+    async function handleFileUpload(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    await uploadDocument(file)
+    }
 
   return (
     <div>
-      <input type="file" accept=".pdf" onChange={onFileUpload} ref={fileRef} hidden />
+      <input type="file" accept=".pdf" onChange={handleFileUpload} ref={fileRef} hidden />
       <button onClick={() => fileRef.current.click()}>+</button>
       <input
         type="text"
