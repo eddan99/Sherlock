@@ -5,6 +5,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from fastapi import UploadFile, File
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -31,8 +32,14 @@ class RAG:
             If the answer is not in the context, say: "I don't have enough evidence for that."
             Context: {context}"""
 
-    def ingest(self):
-        file_path = "./nke-10k-2023.pdf"
+    async def ingest(self, file: UploadFile):
+        os.makedirs("./uploads", exist_ok=True)
+        file_path = os.path.join("./uploads", file.filename)
+
+        content = await file.read()
+        with open(file_path, "wb") as uploaded_file:
+            uploaded_file.write(content)
+
         loader = PyPDFLoader(file_path)
         docs = loader.load()
         all_splits = self.text_splitter.split_documents(docs)
@@ -60,8 +67,3 @@ class RAG:
         result = chain.invoke(question)
         return result
     
-if __name__ == "__main__":
-    rag = RAG()
-    rag.ingest()
-    import asyncio
-    print(asyncio.run(rag.query("how many employees does Nike have?")))
