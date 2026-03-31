@@ -83,6 +83,10 @@ These instructions will get you a copy of the project up and running on your loc
    http://localhost:4173
    ```
 
+## UI
+
+![Sherlock UI](sherlock-ui.png)
+
 ## Usage
 
 1. Open the app at `http://localhost:4173`
