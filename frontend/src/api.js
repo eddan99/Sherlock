@@ -7,7 +7,7 @@ export async function uploadDocument(file) {
     method: "POST",
     body: formData,
   })
-  return res.json()
+  return await res.json()
 }
 
 export async function queryDocument(question) {
@@ -16,5 +16,5 @@ export async function queryDocument(question) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ question }),
   })
-  return res.json()
+  return await res.json()
 }

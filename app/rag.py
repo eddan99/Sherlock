@@ -58,7 +58,7 @@ class RAG:
             search_kwargs={"k": 3},
         )
 
-        docs = retriever.invoke(question)
+        docs = await retriever.ainvoke(question)
         context = "\n\n".join(d.page_content for d in docs)
 
         prompt = ChatPromptTemplate.from_messages([
@@ -66,16 +66,16 @@ class RAG:
             ("human", "{question}"),
         ])
 
-        result = (prompt | self.llm | StrOutputParser()).invoke({"context": context, "question": question})
+        result = await (prompt | self.llm | StrOutputParser()).ainvoke({"context": context, "question": question})
 
-        return self.judge(question, context, result)
+        return await self.judge(question, context, result)
 
-    def judge(self, question, context, answer):
+    async def judge(self, question, context, answer):
         judge_prompt = ChatPromptTemplate.from_messages([
             ("system", self.judge_prompt),
             ("human", "Question: {question}\nContext: {context}\nAnswer: {answer}")
         ])
-        decision_from_judge = (judge_prompt | self.llm | StrOutputParser()).invoke({
+        decision_from_judge = await (judge_prompt | self.llm | StrOutputParser()).ainvoke({
             "question": question,
             "context": context,
             "answer": answer
