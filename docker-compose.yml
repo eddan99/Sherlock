@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+      args:
+        GOOGLE_API_KEY: ${GOOGLE_API_KEY}
     restart: always
     ports:
       - "8000:8000"

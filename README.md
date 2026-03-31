@@ -1,6 +1,6 @@
 # Sherlock
 
-A RAG-based document Q&A assistant. Upload PDF documents and ask questions — answers are strictly grounded in the provided documents using Retrieval Augmented Generation.
+A RAG-based document Sherlock assistant. Upload PDF documents and ask questions, answers are strictly grounded in the provided documents using Retrieval Augmented Generation.
 
 ## Architecture
 
@@ -43,7 +43,8 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installing
 
 1. Open a terminal:
-   - **Windows:** Press `Win + R`, type `cmd`, press Enter
+   - **Windows (CMD):** Press `Win + R`, type `cmd`, press Enter
+   - **Windows (PowerShell):** Run `ni .env` in the terminal, then open it with Notepad
    - **Mac:** Press `Cmd + Space`, type `Terminal`, press Enter
 
 2. Clone the repository:
