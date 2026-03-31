@@ -90,20 +90,16 @@ These instructions will get you a copy of the project up and running on your loc
 3. Ask a question about the document in the text field
 4. Sherlock will answer based strictly on the content of the uploaded document
 
-A sample document is included in the repository root — `nke-10k-2023.pdf` (Nike's 2023 annual report) — which can be used to try the app straight away.
+A sample document is included in the repository root — `POLICE REPORT — BLACKWOOD MANOR INCIDENT.pdf` — a fictional police report that can be used to try the app straight away.
 
-**Example questions with the Nike 10-K:**
+> Q: Did Thomas Reed have a motive?
+> A: Yes. A ledger recorded a personal loan of £3,000 from Lord Blackwood to Thomas Reed that had not been repaid by the deadline.
 
-> Q: How many employees does Nike have?
-> A: As of May 31, 2023, Nike had approximately 83,700 employees worldwide.
+> Q: What did Mrs. Finch hear?
+> A: Mrs. Finch heard a loud crash from the direction of the library at approximately 22:30.
 
-> Q: What was Nike's revenue in 2023?
-> A: Nike's total revenues for fiscal year 2023 were $51.2 billion.
-
-**Sherlock only answers based on the uploaded document:**
-
-> Q: Who is Batman?
-> A: I don't have enough evidence for that.
+> Q: Who attacked Lord Blackwood?
+> A: I don't have enough evidence to answer that.
 
 ### API Endpoints
 
