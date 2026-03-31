@@ -90,6 +90,21 @@ These instructions will get you a copy of the project up and running on your loc
 3. Ask a question about the document in the text field
 4. Sherlock will answer based strictly on the content of the uploaded document
 
+A sample document is included in the repository root — `nke-10k-2023.pdf` (Nike's 2023 annual report) — which can be used to try the app straight away.
+
+**Example questions with the Nike 10-K:**
+
+> Q: How many employees does Nike have?
+> A: As of May 31, 2023, Nike had approximately 83,700 employees worldwide.
+
+> Q: What was Nike's revenue in 2023?
+> A: Nike's total revenues for fiscal year 2023 were $51.2 billion.
+
+**Sherlock only answers based on the uploaded document:**
+
+> Q: Who is Batman?
+> A: I don't have enough evidence for that.
+
 ### API Endpoints
 
 The backend API is available at `http://localhost:8000`.
