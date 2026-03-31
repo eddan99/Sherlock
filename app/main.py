@@ -17,6 +17,8 @@ app.add_middleware(
 
 @app.post("/documents")
 async def upload_documents(file: UploadFile = File(...)):
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=400, detail="only pdf files are supported.")
     try:
         await rag.ingest(file)
         return {"message": "Documents ingested successfully."}
