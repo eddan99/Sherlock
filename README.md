@@ -83,6 +83,13 @@ These instructions will get you a copy of the project up and running on your loc
    http://localhost:4173
    ```
 
+## Usage
+
+1. Open the app at `http://localhost:4173`
+2. Upload a PDF document using the upload button
+3. Ask a question about the document in the text field
+4. Sherlock will answer based strictly on the content of the uploaded document
+
 ### API Endpoints
 
 The backend API is available at `http://localhost:8000`.
