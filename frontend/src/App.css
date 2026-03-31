@@ -15,6 +15,7 @@ body {
 .app {
   width: 700px;
   max-width: 95vw;
+  height: 80vh;
   background: #242424;
   border: 1px solid #3a3a3a;
   border-radius: 16px;
@@ -22,7 +23,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-height: 500px;
 }
 
 .messages {
@@ -30,8 +30,22 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   gap: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #3a3a3a transparent;
+}
+
+.messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 4px;
 }
 
 .message {
