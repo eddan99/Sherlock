@@ -28,9 +28,10 @@ class RAG:
             model=settings.llm_model, 
             temperature=0.0
         )
-        self.system_prompt = """You are a really good assistant for answering questions based on a document.
-            Use only the following context to answer the question.
-            If the answer is not in the context, say: "I don't have enough evidence for that."
+        self.system_prompt = """You are an assistant that answers questions strictly based on the provided document context.
+            You must only answer questions that can be directly answered from the context below.
+            If the question is not related to the context, or the answer cannot be found in the context, you must respond with exactly: "I don't have enough evidence for that."
+            Do not engage in small talk, greetings, or answer general knowledge questions.
             Context: {context}"""
         
         self.judge_prompt = """You are a judge. Given a question, context and answer, 
