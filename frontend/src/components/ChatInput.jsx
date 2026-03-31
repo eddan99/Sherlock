@@ -5,7 +5,7 @@ import { Paperclip } from "lucide-react"
 
 function ChatInput({ setMessages, setUploadStatus }) {
   const [input, setInput] = useState("")
-  const fileRef = useRef(null)
+  const fileInputReference = useRef(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
 
@@ -23,20 +23,20 @@ function ChatInput({ setMessages, setUploadStatus }) {
     setIsLoading(false)
   }
 
-    async function handleFileUpload(e) {
-      const file = e.target.files[0]
-      if (!file) return
-      setIsUploading(true)
-      setUploadStatus("Uploading...")
-      await uploadDocument(file)
-      setUploadStatus(`${file.name} uploaded`)
-      setIsUploading(false)
-    }
+  async function handleFileUpload(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    setIsUploading(true)
+    setUploadStatus("Uploading...")
+    await uploadDocument(file)
+    setUploadStatus(`${file.name} uploaded`)
+    setIsUploading(false)
+  }
 
   return (
     <div className="chat-input-wrapper">
-      <input type="file" accept=".pdf" onChange={handleFileUpload} ref={fileRef} hidden />
-      <button className="upload-btn" onClick={() => fileRef.current.click()}><Paperclip size={20} />
+      <input type="file" accept=".pdf" onChange={handleFileUpload} ref={fileInputReference} hidden />
+      <button className="upload-btn" onClick={() => fileInputReference.current.click()}><Paperclip size={20} />
 </button>
       <input
         className="chat-input"
